@@ -6,6 +6,7 @@ class BankAccount():
         self.name = name
         self.balance = balance
         self.overdraft_fees = overdraft_fees
+        print('New bank account made:', self)
 
     def deposit(self, amount):
         self.balance += amount
@@ -24,15 +25,29 @@ class BankAccount():
         BankAccount.totalBalance -= amount
         print(f"Total balance just dropped to {BankAccount.totalBalance}.")
 
-
-# class ChildBankAccount(BankAccount):
-#     def __init__(self, account_type="", ):
-#         BankAccount.__init__(self)
-#         print('New account made:', self)
+    def __str__(self):
+        return ', '.join(['{key}={value}'.format(key=key, value=self.__dict__.get(key)) for key in self.__dict__])
 
 
+class ChildBankAccount(BankAccount):
+    def __init__(self, account_type="", name="", balance=0, overdraft_fees=0):
+        BankAccount.__init__(self, account_type, name, balance, overdraft_fees)
+        print('New child bank account made:', self)
 
-bryant = BankAccount('savings', 'Bryant', 4000000)
+    def withdraw(self, amount):
+        if self.balance >= amount:
+            self.balance -= amount
+            print(f"{self.name}'s balance just dropped to {self.balance}.")
+            BankAccount.totalBalance -= amount
+            print(f"Total balance just dropped to {BankAccount.totalBalance}.")
+        else: 
+            print(f"Insufficient funds.  {self.name}'s balance would drop below 0.")
+
+        
+
+
+
+bryant = ChildBankAccount('savings', 'Bryant', 4000000)
 print(bryant.balance)
 
 bryant.deposit(1000000)
